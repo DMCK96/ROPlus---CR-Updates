@@ -43,22 +43,18 @@ class Combat(CombatBase):
             if self.handleMove:
                 p.faceTo(target)
 
-            if self.SearingWake.isUsable() and p.ammoNum >= 5:
-                roplus.log("SearingWake")
+            if self.SearingWake.isKnown() and self.SearingWake.isUsable() and p.ammoNum >= 5:
                 self.SearingWake.cast(target)
                 return
 
-            if self.LightningOrb.isUsable():
-                roplus.log("LightningOrb")
+            if self.LightningOrb.isKnown() and self.LightningOrb.isUsable():
                 self.LightningOrb.cast(target)
                 return
 
-            if self.AngelFire.isUsable():
-                roplus.log("AngelFire")
+            if self.AngelFire.isKnown() and self.AngelFire.isUsable():
                 self.AngelFire.cast(target)
                 return
 
-            if self.LambentBolt.isUsable():
-                roplus.log("LambentBolt")
+            if self.LambentBolt.isKnown() and self.LambentBolt.isUsable():
                 self.LambentBolt.cast(target)
                 return

@@ -9,6 +9,7 @@ import data
 import BigWorld
 
 import inspect
+import sys
 
 class MainWindow:
 

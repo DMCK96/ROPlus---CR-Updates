@@ -41,7 +41,7 @@ class Combat(fsm.State):
         if player:
             for entity in player.entitiesInRange(maxRange):
                 entityDistance = maths.getDistance3D(player.position, entity.position)
-                if entity.IsMonster and entity.canSelected() and entity.hp > 0 and (result == None or closestDistance > entityDistance):
+                if player.canBeAttack(entity) and entity.hp > 0 and (result == None or closestDistance > entityDistance):
                     result = entity
                     closestDistance = entityDistance
         return result

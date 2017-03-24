@@ -60,6 +60,6 @@ class MainWindow:
         if p and self.rotationEnabled and self.combatRotationName and self.combatRotationName in combats.LOADED_COMBATS:
             combatInst = combats.LOADED_COMBATS[self.combatRotationName]
             t = p.targetLocked
-            if t and t.IsMonster and t.life == 1 and (t.inCombat or not self.combatCheck):
+            if t and p.canBeAttack(t) and (t.inCombat or not self.combatCheck):
                 combatInst.handleMove = self.handleMovements
                 combatInst.onCombat(t)

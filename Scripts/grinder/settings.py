@@ -8,7 +8,7 @@ def defaultSettings():
         "lastUsedCombat":  "",
         "lastUsedProfile": "",
         "combats": {
-            "attackRange": 15,
+            "attackRange": 20,
         },
     }
 

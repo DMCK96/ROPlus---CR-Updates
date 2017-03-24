@@ -30,7 +30,7 @@ class Skill:
         return 0
 
     def cast(self, target):
-        if self.isKnown() and time.time() - self.lastCastTime > 0.3:
+        if time.time() - self.lastCastTime > 0.3:
             helpers.cellCmd.useSkill(self.skillId, self.getKnownLevel(), target)
             self.lastCastTime = time.time()
 

@@ -1,8 +1,10 @@
+# ROPlus stuff
 import roplus
 from combats import CombatBase
 from roplus.helpers.skill import Skill
 from roplus.helpers import nav
 
+# Python base
 import time
 
 # RO Stuff
@@ -15,11 +17,11 @@ class Combat(CombatBase):
         self.name = "Gunslinger"
         self.author = "ROPlus"
         # Init skills
-        self.ConcussionBomb     = Skill(1503)
         self.ThunderShell       = Skill(1501)
-        self.Grenade            = Skill(1516)
-        self.OblivionBomb       = Skill(1504)
         self.HellfireSalvo      = Skill(1502)
+        self.ConcussionBomb     = Skill(1503)
+        self.OblivionBomb       = Skill(1504)
+        self.Grenade            = Skill(1516)
 
     # Called in loop during the combat
     def onCombat(self, target):
@@ -43,22 +45,22 @@ class Combat(CombatBase):
             if self.handleMove:
                 p.faceTo(target)
 
-            if self.HellfireSalvo.isUsable():
+            if self.HellfireSalvo.isKnown() and self.HellfireSalvo.isUsable():
                 self.HellfireSalvo.cast(target)
                 return
 
-            if self.Grenade.isUsable():
+            if self.Grenade.isKnown() and self.Grenade.isUsable():
                 self.Grenade.cast(target)
                 return
 
-            if self.OblivionBomb.isUsable():
+            if self.OblivionBomb.isKnown() and self.OblivionBomb.isUsable():
                 self.OblivionBomb.cast(target)
                 return
 
-            if self.ConcussionBomb.isUsable():
+            if self.ConcussionBomb.isKnown() and self.ConcussionBomb.isUsable():
                 self.ConcussionBomb.cast(target)
                 return
 
-            if self.ThunderShell.isUsable():
+            if self.ThunderShell.isKnown() and self.ThunderShell.isUsable():
                 self.ThunderShell.cast(target)
                 return
