@@ -28,7 +28,7 @@ def getAttackableEntities(maxRange=20):
     p = BigWorld.player()
     ents = getEntitiesInRange(maxRange)
     for ent in ents:
-        if p.isEnemy(ent) and p.canBeTab(ent) and getattr(ent, 'life', gametypes.LIFE_DEAD) != gametypes.LIFE_DEAD:
+        if p.isEnemy(ent) and p.canBeTab(ent) and getattr(ent, 'life', gametypes.LIFE_DEAD) != gametypes.LIFE_DEAD and (hasattr(ent, 'canSelected') and ent.canSelected()):
             results.append(ent)
     return results
 

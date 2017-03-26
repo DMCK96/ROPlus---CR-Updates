@@ -64,7 +64,7 @@ class QuestCompletor(object):
         # Use quest goal completor
         for i, taskGoal in enumerate(self.getGoals()):
             goalState = taskGoal.get(const.QUEST_GOAL_STATE, '')
-            goalTrackId = taskGoal.get(const.QUEST_GOAL_TRACK_ID, '')
+            goalTrackId = taskGoal.get(const.QUEST_GOAL_TRACK_ID, 0)
             goalOrder = taskGoal.get(const.QUEST_GOAL_ORDER, '')
             if not goalState:
                 # Use an already cached completor

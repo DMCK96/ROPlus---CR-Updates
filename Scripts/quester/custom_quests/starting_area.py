@@ -4,11 +4,22 @@ from roplus.helpers import nav
 from roplus.helpers import entities
 from quester.logics.quest_completor import QuestCompletor
 from quester.logics.goal_completor import GenericGoalCompletor
+from quester.logics.goal_completor import UseAnyItemsGoalCompletor
 
 import BigWorld
 from helpers import qingGong
 
 import time
+
+class TailoredWithCareEquipItems(UseAnyItemsGoalCompletor):
+
+    def __init__(self, questCompletor, taskGoal):
+        UseAnyItemsGoalCompletor.__init__(self, questCompletor, taskGoal, [103111, 103211, 103311, 103411, 103511, 103611])
+
+class SecretSkill(UseAnyItemsGoalCompletor):
+
+    def __init__(self, questCompletor, taskGoal):
+        UseAnyItemsGoalCompletor.__init__(self, questCompletor, taskGoal, [232702, 232719, 232678, 232693, 232707, 232686])
 
 class FightAkutaGoalCompletor(GenericGoalCompletor):
 
@@ -20,16 +31,14 @@ class FightAkutaGoalCompletor(GenericGoalCompletor):
         p = BigWorld.player()
         akuta = entities.findEntityByCharType(23028, 30)
 
-        if p.isDoingAction:
-            return
-
         if akuta:
             if hasattr(akuta, "spellInfo"): # Use this to detect casting :x
                 nav.stopMove()
                 p.faceTo(akuta)
                 qingGong.switchToDodge(qingGong.GO_LEFT, p.qinggongMgr)
-                roplus.log("Attempt to evade Akuta's skill")
-                self.bot.engine.wait(3)
+                self.quest.bot.engine.wait(2)
+            else:
+                self.quest.bot.currentCombat.onCombat(akuta)
             return
 
         GenericGoalCompletor.run(self)
@@ -60,6 +69,8 @@ class FortressFirewaterCompletor(GenericGoalCompletor):
 
 # Tell the bot about the custom quest completor
 QUEST_GOAL_COMPLETORS = { 
-    (13376, 10013247): FightAkutaGoalCompletor,
-    (13335, 10013254): FortressFirewaterCompletor
+    (13303, 00000000): TailoredWithCareEquipItems,
+    (13335, 10013254): FortressFirewaterCompletor,
+    (13357, 00000000): SecretSkill,
+    (13376, 10013247): FightAkutaGoalCompletor
 }

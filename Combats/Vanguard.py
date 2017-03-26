@@ -41,9 +41,6 @@ class Combat(CombatBase):
             if p.isUseSkill():
                 return
 
-            roplus.log("aaaa", time.time())
-            helpers.cellCmd.castChargeSkill()
-
             # Face the target
             if self.handleMove:
                 p.faceTo(target)

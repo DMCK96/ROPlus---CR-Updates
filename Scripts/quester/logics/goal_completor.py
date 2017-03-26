@@ -2,6 +2,7 @@ import roplus
 from roplus.helpers import nav
 from roplus.helpers import entities
 
+import gameglobal
 import const
 import BigWorld
 from guis import uiUtils
@@ -64,5 +65,30 @@ class KillMonsterGoalCompletor(GenericGoalCompletor):
             self.name = "Attack : " + target.roleName
             self.quest.bot.currentCombat.onCombat(target)
             return
+
+        GenericGoalCompletor.run(self)
+
+###########################################
+# UseAnyItemsGoalCompletor
+# Attempt to equip any items specified in the list
+###########################################
+
+class UseAnyItemsGoalCompletor(GenericGoalCompletor):
+
+    def __init__(self, questCompletor, taskGoal, items):
+        GenericGoalCompletor.__init__(self, questCompletor, taskGoal)
+        self.name = "Use items goal completor"
+        self.items = items
+
+    def run(self):
+        p = BigWorld.player()
+        for itemId in self.items:
+            page, pos = p.realInv.findItemById(itemId)
+            if page != const.CONT_NO_POS:
+                item = p.realInv.getQuickVal(page, pos)
+                p.useBagItem(page, pos)
+                self.quest.bot.engine.wait(2)
+                roplus.log("Use item : " + str(itemId))
+                return
 
         GenericGoalCompletor.run(self)

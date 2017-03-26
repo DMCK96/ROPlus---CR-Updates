@@ -3,6 +3,7 @@ import time
 
 from roplus import fsm
 from roplus.helpers import maths
+from roplus.helpers import entities
 
 import BigWorld
 import helpers.navigator
@@ -11,7 +12,7 @@ class FightBack(fsm.State):
 
     def __init__(self, botInstance):
         self.bot = botInstance
-        self.name = "Combat"
+        self.name = "Fight Back"
         self.combatEntity = None
 
     def needToRun(self):
@@ -35,13 +36,12 @@ class FightBack(fsm.State):
         return None
 
     def getBestAttackTarget(self, maxRange):
-        p = BigWorld.player()
-        result = None
-        closestDistance = 0
-        if p:
-            for entity in p.entitiesInRange(maxRange):
-                entityDistance = p.position.distTo(entity.position)
-                if p.isEnemy(entity) and entity.inCombat and entity.hp > 0 and (result == None or closestDistance > entityDistance):
-                    result = entity
-                    closestDistance = entityDistance
-        return result
+        targets = [ ent for ent in entities.getAttackableEntities(30) if ent.inCombat ]
+
+        if self.combatEntity in targets:
+            return self.combatEntity
+
+        if len(targets) > 0:
+            return targets[0]
+
+        return None
