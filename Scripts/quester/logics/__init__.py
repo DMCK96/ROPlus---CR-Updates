@@ -1,0 +1,2 @@
+from quest_completor import QuestCompletor
+from goal_completor import GenericGoalCompletor

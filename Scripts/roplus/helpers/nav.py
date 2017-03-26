@@ -13,6 +13,9 @@ def stopMove():
     if player and navInst:
         navInst.stopPathFinding()
         
+def moveToEntityPathFind(entity):
+    p = BigWorld.player()
+    moveToPathFind((entity.position.x, entity.position.y, entity.position.z, p.mapID))
 
 def moveToPathFind(destination):
     global lastPathFindRequestTimestamp
