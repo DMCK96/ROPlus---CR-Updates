@@ -17,30 +17,37 @@ def cmpEnt(ent1, ent2):
 
     return 0
 
-def getEntitiesInRange(maxRange=20):
+def getEntities(maxRange=None):
     p = BigWorld.player()
-    ents = [ ent for ent in BigWorld.entities.values() if ent.position.distTo(p.position) <= maxRange ]
+    ents = [ ent for ent in BigWorld.entities.values() if not maxRange or ent.position.distTo(p.position) <= maxRange ]
     ents = sorted(ents, cmpEnt)
     return ents
 
-def getAttackableEntities(maxRange=20):
+def getAttackableEntities(maxRange=None):
     results = []
     p = BigWorld.player()
-    ents = getEntitiesInRange(maxRange)
+    ents = getEntities(maxRange)
     for ent in ents:
         if p.isEnemy(ent) and p.canBeTab(ent) and getattr(ent, 'life', gametypes.LIFE_DEAD) != gametypes.LIFE_DEAD and (hasattr(ent, 'canSelected') and ent.canSelected()):
             results.append(ent)
     return results
 
 def findEntityByNpcId(npcId, maxRange=20):
-    ents = getEntitiesInRange(maxRange)
+    ents = getEntities(maxRange)
     for ent in ents:
         if getattr(ent, 'npcId', 0) == npcId:
             return ent
     return None
 
+def findEntityByJiguanId(jiguanId, maxRange=20):
+    ents = getEntities(maxRange)
+    for ent in ents:
+        if getattr(ent, 'jiguanId', 0) == jiguanId:
+            return ent
+    return None
+
 def findEntityByCharType(charType, maxRange=20):
-    ents = getEntitiesInRange(maxRange)
+    ents = getEntities(maxRange)
     for ent in ents:
         if getattr(ent, 'charType', 0) == charType:
             return ent

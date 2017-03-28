@@ -4,11 +4,11 @@ import os
 import imp
 import sys
 
-CUSTOM_QUEST_GOALS_COMPLETORS = {}
+QUEST_COMPLETORS = {}
 
 def reloadCustomQuestCompletors():
-    global CUSTOM_QUEST_GOALS_COMPLETORS
-    CUSTOM_QUEST_GOALS_COMPLETORS = {}
+    global QUEST_COMPLETORS
+    QUEST_COMPLETORS = {}
     dir_path = os.path.dirname(os.path.realpath(__file__))
     for file in os.listdir(dir_path):
         if file.endswith(".py") and not file.startswith("__"):
@@ -18,9 +18,10 @@ def reloadCustomQuestCompletors():
                 del sys.modules[mod_name]
             try:
                 mod = __import__(mod_name, globals(), locals(), [], -1)
-                if mod and hasattr(mod, "QUEST_GOAL_COMPLETORS"):
-                    for quest, goalCompletors in mod.QUEST_GOAL_COMPLETORS.items():
-                        roplus.log("Found custom quest completor for quest : " + str(quest))
-                        CUSTOM_QUEST_GOALS_COMPLETORS[quest] = goalCompletors
+                if mod and hasattr(mod, "QUEST_COMPLETORS"):
+                    for questId, questCompletor in mod.QUEST_COMPLETORS.items():
+                        roplus.log("Found custom quest completor for quest : " + str(questId))
+                        QUEST_COMPLETORS[questId] = questCompletor
             except Exception as e:
                 roplus.log("Unable to load file : " + str(e))
+    roplus.log("Loaded " + str(len(QUEST_COMPLETORS)) + " custom quest completors")

@@ -1,21 +1,19 @@
+import quests
 import roplus
-
-import custom_quests
 import settings
 from gui import main_window
+from logics.quest_completor import GenericQuestCompletor
 from roplus import fsm
-import settings
-
-from states.scenario_playing import ScenarioPlaying
-from states.fight_back import FightBack
 from states.complete_quest import CompleteQuest
-from states.pickup_nearby_quest import PickupNearbyQuest
 from states.idle import Idle
+from states.pickup_nearby_quest import PickupNearbyQuest
+from states.scenario_playing import ScenarioPlaying
 
 class Bot:
 
     def __init__(self):
         self.loadSettings()
+        self.questCompletors = {}
         self.currentQuestCompletor = None
         self.currentCombat = None
         self.combatState = None
@@ -31,6 +29,19 @@ class Bot:
     def loadSettings(self):
         self.settings = settings.loadSettings("quester")
 
+    def getQuestCompletor(self, questId):
+        if questId in self.questCompletors:
+            return self.questCompletors[questId]
+
+        if questId in quests.QUEST_COMPLETORS:
+            completor = quests.QUEST_COMPLETORS[questId](self, questId)
+        else:
+            completor = GenericQuestCompletor(self, questId)
+
+        self.questCompletors[questId] = completor
+        roplus.log("Created quest completor for [" + str(questId) + "] : " + str(completor))
+        return completor
+           
     def start(self, combatInst):
         if self.running:
             roplus.log("Bot is already running !")
@@ -40,12 +51,12 @@ class Bot:
             roplus.log("Error : No combat script !")
             return
             
-        custom_quests.reloadCustomQuestCompletors()
+        quests.reloadCustomQuestCompletors()
         self.currentQuestCompletor = None
+        self.questCompletors = {}
         self.currentCombat = combatInst
         self.currentCombat.handleMove = True
-        
-        self.fightBackState = FightBack(self)
+
         self.engine = fsm.Engine()
         self.engine.states.append(ScenarioPlaying(self))
         self.engine.states.append(CompleteQuest(self))

@@ -1,23 +1,18 @@
 import roplus
-
 from roplus import fsm
-from roplus.helpers import maths
-from roplus.helpers import nav
-from roplus.helpers import questing
-
-from quester.logics.quest_completor import QuestCompletor
 
 from guis import uiUtils
 import BigWorld
 
 import time
 
+
 class CompleteQuest(fsm.State):
 
     def __init__(self, botInstance):
         self.bot = botInstance
         self.name = "Complete quest ..."
-        self.currentQuest = None
+        self.currentQuestCompletor = None
         self.completors = {}
 
     def needToRun(self):
@@ -27,14 +22,14 @@ class CompleteQuest(fsm.State):
         if not p or p.life != 1:
             return False
 
-        self.currentQuest = self.selectQuestCompletor()
-        return self.currentQuest
+        self.currentQuestCompletor = self.selectQuestCompletor()
+        return self.currentQuestCompletor
 
     def run(self):
-        self.bot.currentQuestCompletor = self.currentQuest
+        self.bot.currentQuestCompletor = self.currentQuestCompletor
         self.name = "Running quest completor"
-        self.currentQuest.run()
-
+        self.currentQuestCompletor.resetActions()
+        self.currentQuestCompletor.run()
 
     def onEnter(self):
         return None
@@ -49,12 +44,6 @@ class CompleteQuest(fsm.State):
             for category, quests in p.questInfoCache.items():
                 if category in AUTHORIZED_CATEGORIES:
                     for questId in quests:
-                        completor = None
-                        if questId in self.completors:
-                            completor = self.completors[questId]
-                        else:
-                            self.completors[questId] = QuestCompletor(self.bot, questId)
+                        return self.bot.getQuestCompletor(questId)
 
-                        if self.completors[questId].canRun():
-                            return self.completors[questId]
         return None

@@ -1,34 +1,20 @@
 import BigWorld
 import helpers.cellCmd
 import commQuest
+import const
+from guis import uiUtils
+from data import quest_data as QuestData
+from data import seeker_data as SeekerData
 
-from data import quest_data as QD
-from data import seeker_data as SKD
-
-import time
-
-def getQuestInfosFromCache(t):
-    p = BigWorld.player()
-    if p and hasattr(p, "questInfoCache") and t in p.questInfoCache:
-        results = []
-        for questId in p.questInfoCache[t]:
-            results.append(QuestInfo(questId))
-        return results
-    return None
-
-class QuestInfo:
-
-    def __init__(self, questId):
-        self.questId = questId
-        self.questData = QD.data.get(questId, {})
-
-    def canComplete(self):
-        p = BigWorld.player()
-
-        if not p:
-            return false
-
-        return commQuest.completeQuestCheck(p, self.questId, True)
-
-    def getName(self):
-        return self.questData.get("name", "")
+class QuestGoal(object):
+    def __new__(cls, goalItem):
+        o = super(QuestGoal, cls).__new__(cls)
+        o.description = goalItem.get(const.QUEST_GOAL_DESC, "")
+        o.state = goalItem.get(const.QUEST_GOAL_STATE, False)
+        o.track = goalItem.get(const.QUEST_GOAL_TRACK, False)
+        o.trackSeekId = goalItem.get(const.QUEST_GOAL_TRACK_ID, 0)
+        o.trackTaskType = goalItem.get(const.QUEST_GOAL_TRACK_TYPE, 0)
+        o.type = goalItem.get(const.QUEST_GOAL_TYPE, True)
+        o.order = goalItem.get(const.QUEST_GOAL_ORDER, "")
+        o.trackSeekData = SeekerData.data.get(o.trackSeekId, {})
+        return o
